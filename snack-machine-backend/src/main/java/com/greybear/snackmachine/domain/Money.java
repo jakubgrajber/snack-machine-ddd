@@ -13,6 +13,14 @@ import static java.math.BigDecimal.valueOf;
 public class Money {
     private static final String LESS_THAN_ZERO_EXCEPTION_MESSAGE = "The value must be greater than or equal to zero.";
 
+    public static final Money NONE = new Money(0,0,0,0,0,0);
+    public static final Money CENT = new Money(1,0,0,0,0,0);
+    public static final Money TEN_CENT = new Money(0,1,0,0,0,0);
+    public static final Money QUARTER = new Money(0,0,1,0,0,0);
+    public static final Money DOLLAR = new Money(0,0,0,1,0,0);
+    public static final Money FIVE_DOLLAR = new Money(0,0,0,0,1,0);
+    public static final Money TWENTY_DOLLAR = new Money(0,0,0,0,0,1);
+
     private final int oneCentCount;
     private final int tenCentCount;
     private final int quarterCount;
