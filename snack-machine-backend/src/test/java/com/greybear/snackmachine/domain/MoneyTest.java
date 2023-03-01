@@ -1,16 +1,11 @@
 package com.greybear.snackmachine.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsSources;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
-import java.util.stream.Stream;
 
+import static com.greybear.snackmachine.domain.Money.*;
 import static org.assertj.core.api.Assertions.*;
 
 class MoneyTest {
@@ -121,12 +116,8 @@ class MoneyTest {
     @Test
     void givenTwoMoneyObjects_whenSubtractsMoreThanExists_thenThrowIllegalArgumentException() {
 
-        // GIVEN
-        Money moneyOne = new Money(0, 1, 0, 0, 0,0);
-        Money moneyTwo = new Money(1, 0, 0, 0, 0,0);
-
         // WHEN - THEN
-        assertThatThrownBy(() -> moneyTwo.subtract(moneyOne)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> CENT.subtract(TEN_CENT)).isInstanceOf(IllegalArgumentException.class);
     }
 }
 

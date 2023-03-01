@@ -1,6 +1,7 @@
 package com.greybear.snackmachine.domain;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -10,6 +11,7 @@ import static java.math.BigDecimal.valueOf;
 
 @Accessors(fluent = true)
 @Getter
+@EqualsAndHashCode
 public class Money {
     private static final String LESS_THAN_ZERO_EXCEPTION_MESSAGE = "The value must be greater than or equal to zero.";
 
@@ -67,6 +69,16 @@ public class Money {
                 this.oneDollarCount - moneyToSubtract.oneDollarCount,
                 this.fiveDollarCount - moneyToSubtract.fiveDollarCount,
                 this.twentyDollarCount - moneyToSubtract.twentyDollarCount);
+    }
+
+    public Money multiply(int multiplier) {
+        return new Money(
+                this.oneCentCount * multiplier,
+                this.tenCentCount * multiplier,
+                this.quarterCount * multiplier,
+                this.oneDollarCount *multiplier,
+                this.fiveDollarCount * multiplier,
+                this.twentyDollarCount * multiplier);
     }
 
     private BigDecimal calculateAmount() {

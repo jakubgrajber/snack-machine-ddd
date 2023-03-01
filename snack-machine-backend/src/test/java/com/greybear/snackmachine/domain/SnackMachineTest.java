@@ -2,8 +2,6 @@ package com.greybear.snackmachine.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 import static com.greybear.snackmachine.domain.Money.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -36,7 +34,7 @@ class SnackMachineTest {
         snackMachine.insertMoney(DOLLAR);
 
         // THEN
-        assertThat(snackMachine.moneyInTransaction().amount()).isEqualTo(BigDecimal.valueOf(1.01));
+        assertThat(snackMachine.moneyInTransaction()).isEqualTo(DOLLAR.add(CENT));
     }
 
     @Test
@@ -62,7 +60,7 @@ class SnackMachineTest {
         snackMachine.buySnack();
 
         // THEN
-        assertThat(snackMachine.moneyInTransaction().amount().doubleValue()).isEqualTo(0);
-        assertThat(snackMachine.moneyInside().amount().doubleValue()).isEqualTo(2.0);
+        assertThat(snackMachine.moneyInTransaction()).isEqualTo(NONE);
+        assertThat(snackMachine.moneyInside()).isEqualTo(DOLLAR.multiply(2));
     }
 }

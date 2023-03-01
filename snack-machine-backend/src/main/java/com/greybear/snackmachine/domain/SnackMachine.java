@@ -3,7 +3,6 @@ package com.greybear.snackmachine.domain;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.greybear.snackmachine.domain.Money.*;
@@ -33,4 +32,5 @@ public class SnackMachine extends Entity {
         moneyInside = moneyInside.add(moneyInTransaction);
         moneyInTransaction = NONE;
     }
+
 }
