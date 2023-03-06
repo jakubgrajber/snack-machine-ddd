@@ -1,0 +1,16 @@
+body {
+    background-color: #2c2c2c;
+}
+
+h1 {
+    color: #c47633;
+}
+
+.main-text {
+    color: #a4abb7;
+    font-size: 18px;
+}
+
+.custom-btn {
+    background-color: #a4abb7;
+}

@@ -20,7 +20,7 @@ class SnackMachineTest {
         snackMachine.returnMoney();
 
         // THEN
-        assertThat(snackMachine.moneyInTransaction().amount()).isZero();
+        assertThat(snackMachine.getMoneyInTransaction().getAmount()).isZero();
     }
 
     @Test
@@ -34,7 +34,7 @@ class SnackMachineTest {
         snackMachine.insertMoney(DOLLAR);
 
         // THEN
-        assertThat(snackMachine.moneyInTransaction()).isEqualTo(DOLLAR.add(CENT));
+        assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(DOLLAR.add(CENT));
     }
 
     @Test
@@ -60,7 +60,7 @@ class SnackMachineTest {
         snackMachine.buySnack();
 
         // THEN
-        assertThat(snackMachine.moneyInTransaction()).isEqualTo(NONE);
-        assertThat(snackMachine.moneyInside()).isEqualTo(DOLLAR.multiply(2));
+        assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(NONE);
+        assertThat(snackMachine.getMoneyInside()).isEqualTo(DOLLAR.multiply(2));
     }
 }

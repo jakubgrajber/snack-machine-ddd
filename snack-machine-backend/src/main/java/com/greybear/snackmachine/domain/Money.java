@@ -3,13 +3,11 @@ package com.greybear.snackmachine.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.valueOf;
 
-@Accessors(fluent = true)
 @Getter
 @EqualsAndHashCode
 public class Money {
@@ -88,5 +86,9 @@ public class Money {
                 .add(valueOf(oneDollarCount))
                 .add(valueOf(5).multiply(valueOf(fiveDollarCount)))
                 .add(valueOf(20).multiply(valueOf(twentyDollarCount)));
+    }
+
+    public enum Value {
+        ONE_CENT, TEN_CENT, QUARTER, ONE_DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR
     }
 }
