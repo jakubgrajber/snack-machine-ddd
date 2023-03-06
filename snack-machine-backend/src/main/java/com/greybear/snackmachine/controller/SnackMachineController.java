@@ -39,9 +39,10 @@ public class SnackMachineController {
         return "redirect:/";
     }
 
-    @GetMapping("buySnack")
-    public String buySnack() {
-        snackMachine.buySnack();
-        return "redirect:/";
-    }
+    // TODO: fix view
+//    @GetMapping("buySnack")
+//    public String buySnack() {
+//        snackMachine.buySnack();
+//        return "redirect:/";
+//    }
 }

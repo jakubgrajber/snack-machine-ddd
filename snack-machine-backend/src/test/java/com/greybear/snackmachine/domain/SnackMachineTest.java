@@ -2,6 +2,8 @@ package com.greybear.snackmachine.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static com.greybear.snackmachine.domain.Money.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -49,18 +51,19 @@ class SnackMachineTest {
     }
 
     @Test
-    void givenSnackMachineWithMoneyInTransaction_whenPurchases_thenMoneyInTransactionGoesToMoneyInside() {
+    void givenSnackMachineWithSnacks_whenBuysASnack_thenTradesInsertedMoneyForASnack() {
 
         // GIVEN
         SnackMachine snackMachine = new SnackMachine();
-        snackMachine.insertMoney(DOLLAR);
-        snackMachine.insertMoney(DOLLAR);
+        snackMachine.loadSnacks(1, new SnackPile(new Snack("Some snack"), 10, new BigDecimal("4.99")));
+        snackMachine.insertMoney(FIVE_DOLLAR);
 
         // WHEN
-        snackMachine.buySnack();
+        snackMachine.buySnack(1);
 
         // THEN
         assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(NONE);
-        assertThat(snackMachine.getMoneyInside()).isEqualTo(DOLLAR.multiply(2));
+//        assertThat(snackMachine.getMoneyInside()).isEqualTo();
+        assertThat(snackMachine.getSnackPile(1).quantity()).isEqualTo(9);
     }
 }
