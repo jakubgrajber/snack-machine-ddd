@@ -21,12 +21,12 @@ class MoneyTest {
         Money result = money1.add(money2);
 
         // THEN
-        assertThat(result.oneCentCount()).isEqualTo(2);
-        assertThat(result.tenCentCount()).isEqualTo(4);
-        assertThat(result.quarterCount()).isEqualTo(6);
-        assertThat(result.oneDollarCount()).isEqualTo(8);
-        assertThat(result.fiveDollarCount()).isEqualTo(10);
-        assertThat(result.twentyDollarCount()).isEqualTo(12);
+        assertThat(result.getOneCentCount()).isEqualTo(2);
+        assertThat(result.getTenCentCount()).isEqualTo(4);
+        assertThat(result.getQuarterCount()).isEqualTo(6);
+        assertThat(result.getOneDollarCount()).isEqualTo(8);
+        assertThat(result.getFiveDollarCount()).isEqualTo(10);
+        assertThat(result.getTwentyDollarCount()).isEqualTo(12);
     }
 
     @Test
@@ -90,7 +90,7 @@ class MoneyTest {
         Money money = new Money(oneCent, tenCent, quarter, oneDollar, fiveDollar, twentyDollar);
 
         // THEN
-        assertThat(money.amount().doubleValue()).isEqualTo(expectedAmount);
+        assertThat(money.getAmount().doubleValue()).isEqualTo(expectedAmount);
     }
 
     @Test
@@ -104,12 +104,12 @@ class MoneyTest {
         Money result = moneyOne.subtract(moneyTwo);
 
         // THEN
-        assertThat(result.oneCentCount()).isEqualTo(9);
-        assertThat(result.tenCentCount()).isEqualTo(8);
-        assertThat(result.quarterCount()).isEqualTo(7);
-        assertThat(result.oneDollarCount()).isEqualTo(6);
-        assertThat(result.fiveDollarCount()).isEqualTo(5);
-        assertThat(result.twentyDollarCount()).isEqualTo(4);
+        assertThat(result.getOneCentCount()).isEqualTo(9);
+        assertThat(result.getTenCentCount()).isEqualTo(8);
+        assertThat(result.getQuarterCount()).isEqualTo(7);
+        assertThat(result.getOneDollarCount()).isEqualTo(6);
+        assertThat(result.getFiveDollarCount()).isEqualTo(5);
+        assertThat(result.getTwentyDollarCount()).isEqualTo(4);
 
     }
 
