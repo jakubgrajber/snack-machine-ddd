@@ -1,0 +1,12 @@
+services:
+  postgres-db:
+    image: postgres
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: snack-machine
+    volumes:
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
