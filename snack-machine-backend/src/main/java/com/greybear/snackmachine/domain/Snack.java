@@ -1,10 +1,13 @@
 package com.greybear.snackmachine.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-public class Snack extends AggregateRoot {
+@EqualsAndHashCode(exclude = "name")
+public class Snack {
 
+    private long id;
     private final String name;
 
     public Snack(String name) {

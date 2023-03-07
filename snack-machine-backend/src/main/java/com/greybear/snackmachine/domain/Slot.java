@@ -1,17 +1,21 @@
 package com.greybear.snackmachine.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 
 
 @Getter
-public class Slot extends Entity{
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Slot {
 
+    @EqualsAndHashCode.Include
+    private long id;
     @Setter
     private SnackPile snackPile;
-    private SnackMachine snackMachine;
-    private int position;
+    private final SnackMachine snackMachine;
+    private final int position;
 
     public Slot(SnackMachine snackMachine, int position) {
         this.snackMachine = snackMachine;

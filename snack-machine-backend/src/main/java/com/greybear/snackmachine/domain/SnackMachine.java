@@ -1,5 +1,6 @@
 package com.greybear.snackmachine.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -9,9 +10,12 @@ import java.util.List;
 import static com.greybear.snackmachine.domain.Money.*;
 
 @Getter
-public class SnackMachine extends AggregateRoot {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class SnackMachine {
 
     private static final List<Money> COINS_AND_NOTES = List.of(CENT, TEN_CENT, QUARTER, DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR);
+    @EqualsAndHashCode.Include
+    private long id;
     private Money moneyInside;
     private BigDecimal moneyInTransaction;
     protected List<Slot> slots;
