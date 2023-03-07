@@ -2,6 +2,7 @@ package com.greybear.snackmachine.domain;
 
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,12 +13,12 @@ public class SnackMachine extends AggregateRoot {
 
     private static final List<Money> COINS_AND_NOTES = List.of(CENT, TEN_CENT, QUARTER, DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR);
     private Money moneyInside;
-    private Money moneyInTransaction;
+    private BigDecimal moneyInTransaction;
     protected List<Slot> slots;
 
     public SnackMachine() {
         moneyInside = NONE;
-        moneyInTransaction = NONE;
+        moneyInTransaction = BigDecimal.ZERO;
         slots = new LinkedList<>(List.of(
            new Slot(this, 1),
            new Slot(this, 2),
@@ -30,22 +31,42 @@ public class SnackMachine extends AggregateRoot {
         if (!COINS_AND_NOTES.contains(money))
             throw new IllegalArgumentException("Only one coin or note can be inserted at a time.");
 
-        moneyInTransaction = moneyInTransaction.add(money);
+        moneyInTransaction = moneyInTransaction.add(money.getAmount());
+        moneyInside = moneyInside.add(money);
     }
 
     public void returnMoney() {
-        moneyInTransaction = NONE;
+        Money moneyToReturn = moneyInside.allocate(moneyInTransaction);
+        moneyInside = moneyInside.subtract(moneyToReturn);
+        moneyInTransaction = BigDecimal.ZERO;
     }
 
     public void buySnack(int position) {
         Slot slot = getSlot(position);
+
+        if (slot.getSnackPile().quantity() <= 0)
+            throw new IllegalStateException("Insufficient quantity of goods.");
+
+        if (slot.getSnackPile().price().compareTo(moneyInTransaction) > 0)
+            throw new IllegalStateException("Not enough money.");
+
         slot.setSnackPile(slot.getSnackPile().subtractOne());
-        moneyInside = moneyInside.add(moneyInTransaction);
-        moneyInTransaction = NONE;
+
+        Money change = moneyInside.allocate(moneyInTransaction.subtract(slot.getSnackPile().price()));
+
+        if (change.getAmount().compareTo(moneyInTransaction.subtract(slot.getSnackPile().price())) < 0)
+            throw new IllegalStateException("Not enough money for a change.");
+
+        moneyInside = moneyInside.subtract(change);
+
+        moneyInTransaction = BigDecimal.ZERO;
     }
 
     public void loadSnacks(int position, SnackPile snackPile) {
         getSlot(position).setSnackPile(snackPile);
+    }
+    public void loadMoney(Money money) {
+        moneyInside = moneyInside.add(money);
     }
 
     public SnackPile getSnackPile(int position) {
@@ -56,4 +77,5 @@ public class SnackMachine extends AggregateRoot {
         return slots.stream().filter(slot -> slot.getPosition() == position)
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Wrong slot position number."));
     }
+
 }

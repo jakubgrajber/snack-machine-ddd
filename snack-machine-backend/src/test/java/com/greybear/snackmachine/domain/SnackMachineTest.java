@@ -1,5 +1,6 @@
 package com.greybear.snackmachine.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -11,39 +12,44 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class SnackMachineTest {
 
+    private SnackMachine snackMachine;
+
+    @BeforeEach
+    void setUp() {
+        snackMachine = new SnackMachine();
+    }
+
     @Test
     void givenSnackMachineWithMoneyInTransaction_when_then() {
 
         // GIVEN
-        SnackMachine snackMachine = new SnackMachine();
         snackMachine.insertMoney(DOLLAR);
 
         // WHEN
         snackMachine.returnMoney();
 
         // THEN
-        assertThat(snackMachine.getMoneyInTransaction().getAmount()).isZero();
+        assertThat(snackMachine.getMoneyInTransaction()).isZero();
     }
 
     @Test
     void givenSnackMachine_whenInsertsMoney_thenMoneyGoesToTransactionMoney() {
 
         // GIVEN
-        SnackMachine snackMachine = new SnackMachine();
+        BigDecimal insertedMoney = new BigDecimal("1.01");
 
         // WHEN
         snackMachine.insertMoney(CENT);
         snackMachine.insertMoney(DOLLAR);
 
         // THEN
-        assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(DOLLAR.add(CENT));
+        assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(insertedMoney);
     }
 
     @Test
     void givenSnackMachine_whenInsertsMoreThanOneCoinOrNoteAtATime_thenThrowIllegalArgumentException() {
 
         // GIVEN
-        SnackMachine snackMachine = new SnackMachine();
         Money twoCent = CENT.add(CENT);
 
         // WHEN - THEN
@@ -54,16 +60,95 @@ class SnackMachineTest {
     void givenSnackMachineWithSnacks_whenBuysASnack_thenTradesInsertedMoneyForASnack() {
 
         // GIVEN
-        SnackMachine snackMachine = new SnackMachine();
-        snackMachine.loadSnacks(1, new SnackPile(new Snack("Some snack"), 10, new BigDecimal("4.99")));
-        snackMachine.insertMoney(FIVE_DOLLAR);
+        snackMachine.loadSnacks(1, new SnackPile(new Snack("Some snack"), 10, new BigDecimal("1")));
+        snackMachine.insertMoney(DOLLAR);
 
         // WHEN
         snackMachine.buySnack(1);
 
         // THEN
-        assertThat(snackMachine.getMoneyInTransaction()).isEqualTo(NONE);
-//        assertThat(snackMachine.getMoneyInside()).isEqualTo();
+        assertThat(snackMachine.getMoneyInTransaction()).isZero();
+        assertThat(snackMachine.getMoneyInside()).isEqualTo(DOLLAR);
         assertThat(snackMachine.getSnackPile(1).quantity()).isEqualTo(9);
+    }
+
+    @Test
+    void givenSnackMachineWithEmptySlots_whenMakesAPurchase_thenThrowsIllegalStateException() {
+
+        // WHEN - THEN
+        assertThatThrownBy(() -> snackMachine.buySnack(1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Insufficient quantity of goods.");
+    }
+
+    @Test
+    void givenNotEnoughMoney_whenMakesAPurchase_thenThrowsIllegalStateException() {
+
+        // GIVEN
+        Snack snack = new Snack("A snack");
+        BigDecimal price = new BigDecimal("2.00");
+        SnackPile snackPile = new SnackPile(snack, 1, price);
+        snackMachine.loadSnacks(1, snackPile);
+
+        snackMachine.insertMoney(DOLLAR);
+
+        // WHEN - THEN
+        assertThatThrownBy(() -> snackMachine.buySnack(1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Not enough money.");
+    }
+
+    @Test
+    void givenMoneyInsideMachine_whenReturnsChange_thenReturnsMoneyWithHighestDenominationFirst() {
+
+        // GIVEN
+        snackMachine.loadMoney(DOLLAR);
+        snackMachine.insertMoney(QUARTER);
+        snackMachine.insertMoney(QUARTER);
+        snackMachine.insertMoney(QUARTER);
+        snackMachine.insertMoney(QUARTER);
+
+        // WHEN
+        snackMachine.returnMoney();
+
+        // THEN
+        assertThat(snackMachine.getMoneyInside().getQuarterCount()).isEqualTo(4);
+        assertThat(snackMachine.getMoneyInside().getOneDollarCount()).isZero();
+    }
+
+    @Test
+    void givenMoneyInsideMachine_whenMakesAPurchase_thenReturnsAChange() {
+
+        // GIVEN
+        Snack snack = new Snack("snack");
+        BigDecimal price = new BigDecimal("0.50");
+        SnackPile snackPile = new SnackPile(snack, 1, price);
+        snackMachine.loadSnacks(1, snackPile);
+        snackMachine.loadMoney(TEN_CENT.multiply(10));
+
+        // WHEN
+        snackMachine.insertMoney(DOLLAR);
+        snackMachine.buySnack(1);
+
+        // THEN
+        assertThat(snackMachine.getMoneyInside().getAmount()).isEqualTo(new BigDecimal("1.50"));
+        assertThat(snackMachine.getMoneyInTransaction()).isZero();
+    }
+
+    @Test
+    void givenNotEnoughMoneyInsideMachineForAChange_whenMakesAPurchase_thenThrowsIllegalStateException() {
+
+        // GIVEN
+        Snack snack = new Snack("snack");
+        BigDecimal price = new BigDecimal("0.50");
+        SnackPile snackPile = new SnackPile(snack, 1, price);
+        snackMachine.loadSnacks(1, snackPile);
+
+        // WHEN - THEN
+        snackMachine.insertMoney(DOLLAR);
+        assertThatThrownBy(() -> snackMachine.buySnack(1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Not enough money for a change.");
+
     }
 }
