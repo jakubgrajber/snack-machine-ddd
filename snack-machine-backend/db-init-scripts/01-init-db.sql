@@ -47,3 +47,8 @@ INSERT INTO snack (name) VALUES ('Chocolate');
 INSERT INTO snack (name) VALUES ('Soda');
 INSERT INTO snack (name) VALUES ('Gum');
 
+-- SLOTS
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 3.50, 1, 1, 1);
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 2.75, 1, 2, 2);
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 0.99, 1, 3, 3);
+

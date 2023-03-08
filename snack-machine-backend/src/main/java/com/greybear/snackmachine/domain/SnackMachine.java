@@ -2,6 +2,7 @@ package com.greybear.snackmachine.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import static com.greybear.snackmachine.domain.Money.*;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class SnackMachine {
 
     private static final List<Money> COINS_AND_NOTES = List.of(CENT, TEN_CENT, QUARTER, DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR);
@@ -28,6 +30,13 @@ public class SnackMachine {
            new Slot(this, 2),
            new Slot(this, 3)
         ));
+    }
+
+    public SnackMachine(long id, Money moneyInside, List<Slot> slots) {
+        this.id = id;
+        this.moneyInside = moneyInside;
+        this.moneyInTransaction = BigDecimal.ZERO;
+        this.slots = slots;
     }
 
     public void insertMoney(Money money) {

@@ -3,6 +3,7 @@ package com.greybear.snackmachine.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -10,6 +11,7 @@ import static java.math.BigDecimal.valueOf;
 
 @Getter
 @EqualsAndHashCode
+@ToString
 public class Money {
     private static final String LESS_THAN_ZERO_EXCEPTION_MESSAGE = "The value must be greater than or equal to zero.";
 
