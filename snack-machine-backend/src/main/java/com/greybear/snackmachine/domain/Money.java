@@ -4,6 +4,7 @@ package com.greybear.snackmachine.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 
@@ -29,6 +30,7 @@ public class Money {
     private final int oneDollarCount;
     private final int fiveDollarCount;
     private final int twentyDollarCount;
+    @Transient
     private final BigDecimal amount;
 
 

@@ -3,10 +3,15 @@ package com.greybear.snackmachine.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Embedded;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import java.math.BigDecimal;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.greybear.snackmachine.domain.Money.*;
 
@@ -17,26 +22,26 @@ public class SnackMachine {
 
     private static final List<Money> COINS_AND_NOTES = List.of(CENT, TEN_CENT, QUARTER, DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR);
     @EqualsAndHashCode.Include
+    @Id
     private long id;
+
+    @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
     private Money moneyInside;
+
+    @Transient
     private BigDecimal moneyInTransaction;
-    protected List<Slot> slots;
+
+    @MappedCollection(idColumn = "snack_machine_id")
+    protected Set<Slot> slots;
 
     public SnackMachine() {
         moneyInside = NONE;
         moneyInTransaction = BigDecimal.ZERO;
-        slots = new LinkedList<>(List.of(
+        slots = new HashSet<>(List.of(
            new Slot(this, 1),
            new Slot(this, 2),
            new Slot(this, 3)
         ));
-    }
-
-    public SnackMachine(long id, Money moneyInside, List<Slot> slots) {
-        this.id = id;
-        this.moneyInside = moneyInside;
-        this.moneyInTransaction = BigDecimal.ZERO;
-        this.slots = slots;
     }
 
     public void insertMoney(Money money) {
@@ -57,17 +62,17 @@ public class SnackMachine {
     public void buySnack(int position) {
         Slot slot = getSlot(position);
 
-        if (slot.getSnackPile().quantity() <= 0)
+        if (slot.getSnackPile().getQuantity() <= 0)
             throw new IllegalStateException("Insufficient quantity of goods.");
 
-        if (slot.getSnackPile().price().compareTo(moneyInTransaction) > 0)
+        if (slot.getSnackPile().getPrice().compareTo(moneyInTransaction) > 0)
             throw new IllegalStateException("Not enough money.");
 
         slot.setSnackPile(slot.getSnackPile().subtractOne());
 
-        Money change = moneyInside.allocate(moneyInTransaction.subtract(slot.getSnackPile().price()));
+        Money change = moneyInside.allocate(moneyInTransaction.subtract(slot.getSnackPile().getPrice()));
 
-        if (change.getAmount().compareTo(moneyInTransaction.subtract(slot.getSnackPile().price())) < 0)
+        if (change.getAmount().compareTo(moneyInTransaction.subtract(slot.getSnackPile().getPrice())) < 0)
             throw new IllegalStateException("Not enough money for a change.");
 
         moneyInside = moneyInside.subtract(change);

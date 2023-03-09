@@ -1,23 +1,39 @@
 package com.greybear.snackmachine.domain;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.data.annotation.Transient;
+
 import java.math.BigDecimal;
 
-import static com.greybear.snackmachine.domain.Snack.*;
-import static java.math.BigDecimal.*;
+import static com.greybear.snackmachine.domain.Snack.NONE;
+import static java.math.BigDecimal.ZERO;
 
 
-public record SnackPile(Snack snack, int quantity, BigDecimal price) {
+@NoArgsConstructor
+@Getter
+@ToString
+public class SnackPile {
 
     public static final SnackPile EMPTY = new SnackPile(NONE, 0, ZERO);
+    @Transient
+    @ToString.Exclude
+    private Snack snack;
+    private int quantity;
+    private BigDecimal price;
 
-    public SnackPile {
+    public SnackPile(Snack snack, int quantity, BigDecimal price) {
         if (quantity < 0)
             throw new IllegalArgumentException("The quantity cannot be less than zero.");
         if (price != null && price.compareTo(ZERO) < 0)
             throw new IllegalArgumentException("The price cannot be less than zero.");
         if (price != null && price.remainder(new BigDecimal("0.01")).compareTo(ZERO) > 0)
             throw new IllegalArgumentException("The value of the price cannot be more precise than one cent.");
+        this.snack = snack;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     public SnackPile subtractOne() {

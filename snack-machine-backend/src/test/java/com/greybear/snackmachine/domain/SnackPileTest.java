@@ -59,9 +59,9 @@ class SnackPileTest {
         SnackPile resultSnackPile = initSnackPile.subtractOne();
 
         // THEN
-        assertThat(resultSnackPile.quantity()).isEqualTo(reducedQuantity);
-        assertThat(resultSnackPile.snack()).isEqualTo(CHOCOLATE);
-        assertThat(resultSnackPile.price()).isEqualTo(price);
+        assertThat(resultSnackPile.getQuantity()).isEqualTo(reducedQuantity);
+        assertThat(resultSnackPile.getSnack()).isEqualTo(CHOCOLATE);
+        assertThat(resultSnackPile.getPrice()).isEqualTo(price);
 
     }
 }

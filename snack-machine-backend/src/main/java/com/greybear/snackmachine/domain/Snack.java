@@ -3,6 +3,7 @@ package com.greybear.snackmachine.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 
 @Getter
 @EqualsAndHashCode(exclude = "name")
@@ -13,6 +14,8 @@ public class Snack {
     public static final Snack CHOCOLATE = new Snack(1, "Chocolate");
     public static final Snack SODA = new Snack(2, "Soda");
     public static final Snack GUM = new Snack(3, "Gum");
+
+    @Id
     private final long id;
     private final String name;
 

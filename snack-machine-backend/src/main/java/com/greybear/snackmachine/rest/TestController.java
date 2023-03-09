@@ -2,40 +2,32 @@ package com.greybear.snackmachine.rest;
 
 import com.greybear.snackmachine.domain.Snack;
 import com.greybear.snackmachine.domain.SnackMachine;
-
-import com.greybear.snackmachine.service.SnackMachineService;
-import com.greybear.snackmachine.service.SnackService;
+import com.greybear.snackmachine.repository.SnackMachineRepository;
+import com.greybear.snackmachine.repository.SnackRepository;
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class TestController {
 
-    private final SnackMachineService snackMachineService;
-    private final SnackService snackService;
+    private final SnackMachineRepository snackMachineRepository;
+    private final SnackRepository snackRepository;
 
-    @GetMapping("/snack-machine-test")
-    public String test() {
+    @GetMapping("/test")
+    public void test() {
 
-        Optional<SnackMachine> optionalSnackMachine = snackMachineService.findById(1L);
+        Iterable<SnackMachine> snackMachines = snackMachineRepository.findAll();
+        for (SnackMachine snackMachine : snackMachines)
+            log.info(snackMachine.toString());
 
-        if (optionalSnackMachine.isPresent())
-            return optionalSnackMachine.get().toString();
-
-        else return "Snack Machine not found.";
-    }
-
-    @GetMapping("snack-test")
-    public String getSnack() {
-
-        Optional<Snack> byId = snackService.findById(1);
-
-        if (byId.isPresent())
-            return byId.get().toString();
-        else return "Snack not found";
+        Iterable<Snack> snacks = snackRepository.findAll();
+        for (Snack snack : snacks)
+            log.info(snack.toString());
     }
 }

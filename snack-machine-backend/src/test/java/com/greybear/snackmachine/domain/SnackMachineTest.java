@@ -70,7 +70,7 @@ class SnackMachineTest {
         // THEN
         assertThat(snackMachine.getMoneyInTransaction()).isZero();
         assertThat(snackMachine.getMoneyInside()).isEqualTo(DOLLAR);
-        assertThat(snackMachine.getSnackPile(1).quantity()).isEqualTo(9);
+        assertThat(snackMachine.getSnackPile(1).getQuantity()).isEqualTo(9);
     }
 
     @Test

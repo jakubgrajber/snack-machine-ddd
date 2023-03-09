@@ -1,8 +1,8 @@
 package com.greybear.snackmachine.repository;
 
-import com.greybear.snackmachine.dto.SnackMachineDTO;
+import com.greybear.snackmachine.domain.SnackMachine;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface SnackMachineRepository extends CrudRepository<SnackMachineDTO, Long> {
+public interface SnackMachineRepository extends CrudRepository<SnackMachine, Long> {
 }
