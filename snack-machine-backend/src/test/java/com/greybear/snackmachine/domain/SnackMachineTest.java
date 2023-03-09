@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static com.greybear.snackmachine.domain.Money.*;
+import static com.greybear.snackmachine.domain.Snack.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -60,7 +61,7 @@ class SnackMachineTest {
     void givenSnackMachineWithSnacks_whenBuysASnack_thenTradesInsertedMoneyForASnack() {
 
         // GIVEN
-        snackMachine.loadSnacks(1, new SnackPile(new Snack("Some snack"), 10, new BigDecimal("1")));
+        snackMachine.loadSnacks(1, new SnackPile(CHOCOLATE, 10, new BigDecimal("1")));
         snackMachine.insertMoney(DOLLAR);
 
         // WHEN
@@ -85,9 +86,8 @@ class SnackMachineTest {
     void givenNotEnoughMoney_whenMakesAPurchase_thenThrowsIllegalStateException() {
 
         // GIVEN
-        Snack snack = new Snack("A snack");
         BigDecimal price = new BigDecimal("2.00");
-        SnackPile snackPile = new SnackPile(snack, 1, price);
+        SnackPile snackPile = new SnackPile(CHOCOLATE, 1, price);
         snackMachine.loadSnacks(1, snackPile);
 
         snackMachine.insertMoney(DOLLAR);
@@ -120,9 +120,8 @@ class SnackMachineTest {
     void givenMoneyInsideMachine_whenMakesAPurchase_thenReturnsAChange() {
 
         // GIVEN
-        Snack snack = new Snack("snack");
         BigDecimal price = new BigDecimal("0.50");
-        SnackPile snackPile = new SnackPile(snack, 1, price);
+        SnackPile snackPile = new SnackPile(CHOCOLATE, 1, price);
         snackMachine.loadSnacks(1, snackPile);
         snackMachine.loadMoney(TEN_CENT.multiply(10));
 
@@ -139,9 +138,8 @@ class SnackMachineTest {
     void givenNotEnoughMoneyInsideMachineForAChange_whenMakesAPurchase_thenThrowsIllegalStateException() {
 
         // GIVEN
-        Snack snack = new Snack("snack");
         BigDecimal price = new BigDecimal("0.50");
-        SnackPile snackPile = new SnackPile(snack, 1, price);
+        SnackPile snackPile = new SnackPile(CHOCOLATE, 1, price);
         snackMachine.loadSnacks(1, snackPile);
 
         // WHEN - THEN

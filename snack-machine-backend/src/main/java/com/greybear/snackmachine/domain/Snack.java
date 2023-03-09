@@ -9,12 +9,13 @@ import lombok.ToString;
 @ToString
 public class Snack {
 
-    private long id;
+    public static final Snack NONE = new Snack(0, "None");
+    public static final Snack CHOCOLATE = new Snack(1, "Chocolate");
+    public static final Snack SODA = new Snack(2, "Soda");
+    public static final Snack GUM = new Snack(3, "Gum");
+    private final long id;
     private final String name;
 
-    public Snack(String name) {
-        this.name = name;
-    }
     public Snack(long id, String name) {
         this.id = id;
         this.name = name;
