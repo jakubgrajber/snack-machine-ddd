@@ -19,7 +19,7 @@ import java.util.Set;
 public class SnackMachineService {
 
     private final SnackMachineRepository snackMachineRepository;
-    private final SnackRepository snackRepository;
+    private final SnackService snackService;
 
     // TODO refactor - introduce mappers/factories
     public Optional<SnackMachine> findById(long id) {
@@ -46,12 +46,10 @@ public class SnackMachineService {
             Set<SlotDTO> slotDTOS = snackMachineDTO.getSlots();
 
             for (SlotDTO slotDTO : slotDTOS) {
-                Optional<SnackDTO> optionalSnackDTO = snackRepository.findById(slotDTO.getSnackId());
+                Optional<Snack> optionalSnack = snackService.findById(slotDTO.getSnackId());
 
-                if (optionalSnackDTO.isPresent()) {
-                    Snack snack = new Snack(optionalSnackDTO.get().getName());
-                    SnackPile snackPile = new SnackPile(snack, slotDTO.getQuantity(), slotDTO.getPrice());
-
+                if (optionalSnack.isPresent()) {
+                    SnackPile snackPile = new SnackPile(optionalSnack.get(), slotDTO.getQuantity(), slotDTO.getPrice());
                     slots.add(new Slot(slotDTO.getId(), snackPile, snackMachine, slotDTO.getPosition()));
                 }
             }
