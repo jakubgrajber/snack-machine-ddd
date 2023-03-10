@@ -21,8 +21,8 @@ public class Slot {
     @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
     private SnackPile snackPile;
 
-    @Transient
     @ToString.Exclude
+    @Transient
     private  SnackMachine snackMachine;
     private int position;
 

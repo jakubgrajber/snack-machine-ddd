@@ -3,6 +3,8 @@ package com.greybear.snackmachine.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Embedded;
@@ -18,6 +20,7 @@ import static com.greybear.snackmachine.domain.Money.*;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Slf4j
 public class SnackMachine {
 
     private static final List<Money> COINS_AND_NOTES = List.of(CENT, TEN_CENT, QUARTER, DOLLAR, FIVE_DOLLAR, TWENTY_DOLLAR);
@@ -68,7 +71,8 @@ public class SnackMachine {
         if (slot.getSnackPile().getPrice().compareTo(moneyInTransaction) > 0)
             throw new IllegalStateException("Not enough money.");
 
-        slot.setSnackPile(slot.getSnackPile().subtractOne());
+        slot.getSnackPile().subtractOne();
+//        slot.setSnackPile(slot.getSnackPile().subtractOne());
 
         Money change = moneyInside.allocate(moneyInTransaction.subtract(slot.getSnackPile().getPrice()));
 

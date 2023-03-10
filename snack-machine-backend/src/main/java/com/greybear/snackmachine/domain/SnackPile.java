@@ -18,9 +18,10 @@ import static java.math.BigDecimal.ZERO;
 public class SnackPile {
 
     public static final SnackPile EMPTY = new SnackPile(NONE, 0, ZERO);
-    @Transient
     @ToString.Exclude
+//    @Transient
     private Snack snack;
+//    private long snackId;
     private int quantity;
     private BigDecimal price;
 
@@ -34,6 +35,7 @@ public class SnackPile {
         this.snack = snack;
         this.quantity = quantity;
         this.price = price;
+//        this.snackId = snack.getId();
     }
 
     public SnackPile subtractOne() {
