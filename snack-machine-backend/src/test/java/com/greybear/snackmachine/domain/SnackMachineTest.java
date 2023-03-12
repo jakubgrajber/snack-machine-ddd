@@ -1,7 +1,12 @@
 package com.greybear.snackmachine.domain;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 
@@ -147,6 +152,26 @@ class SnackMachineTest {
         assertThatThrownBy(() -> snackMachine.buySnack(1))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Not enough money for a change.");
+    }
 
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', textBlock = """
+           10.99 | false
+           5.00  | true
+           3.75  | true""")
+    void givenCertainAmountOfMoneyInsertedIntoTheMachine_whenChecksIfCanMakeAPurchase_thanReturnBooleanAccordingToTheGivenMoney
+            (String money, boolean expectedPurchaseDecision) {
+
+        // GIVEN
+        BigDecimal price = new BigDecimal(money);
+        SnackPile snackPile = new SnackPile(CHOCOLATE, 1, price);
+        snackMachine.loadSnacks(1, snackPile);
+
+        // WHEN
+        snackMachine.insertMoney(FIVE_DOLLAR);
+        boolean canBuyASnack = snackMachine.canMakePurchase(1);
+
+        // THEN
+        assertThat(canBuyASnack).isEqualTo(expectedPurchaseDecision);
     }
 }

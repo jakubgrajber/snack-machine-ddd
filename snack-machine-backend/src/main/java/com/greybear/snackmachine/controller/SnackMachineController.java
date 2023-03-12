@@ -28,6 +28,7 @@ public class SnackMachineController {
     @GetMapping("/")
     public String snackMachineView(Model model) {
         model.addAttribute("snackMachine", mainSnackMachine);
+        model.addAttribute("purchaseInfo", "Insert money");
         return "snack-machine";
     }
 
@@ -54,9 +55,15 @@ public class SnackMachineController {
     }
 
     @GetMapping("buySnack")
-    public String buySnack(@RequestParam int position) {
-        mainSnackMachine.buySnack(position);
-        snackMachineRepository.save(mainSnackMachine);
-        return "redirect:/";
+    public String buySnack(@RequestParam int position, Model model) {
+        model.addAttribute("snackMachine", mainSnackMachine);
+        if (mainSnackMachine.canMakePurchase(position)) {
+            mainSnackMachine.buySnack(position);
+            snackMachineRepository.save(mainSnackMachine);
+            model.addAttribute("purchaseInfo", "Transaction completed!");
+        } else
+            model.addAttribute("purchaseInfo", "Not enough money!");
+
+        return "snack-machine";
     }
 }

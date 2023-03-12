@@ -107,4 +107,8 @@ public class SnackMachine {
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Wrong slot position number."));
     }
 
+    public boolean canMakePurchase(int slotPosition) {
+        BigDecimal snackPrice = getSlot(slotPosition).getSnackPile().getPrice();
+        return moneyInTransaction.compareTo(snackPrice) >= 0;
+    }
 }

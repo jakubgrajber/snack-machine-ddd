@@ -20,9 +20,14 @@
             <div class="col">
                 <p>Money inserted:</p>
             </div>
+
             <div class="col">
                 <strong th:text="${snackMachine.moneyInTransaction} + ' $'"></strong>
             </div>
+        </div>
+
+        <div class="row mt-5">
+            <strong th:text="${purchaseInfo}"></strong>
         </div>
 
         <div th:with="insertMoneyLink='/insertMoney?value='">
@@ -68,6 +73,7 @@
                 <a th:href="@{/buySnack?position=3}" class="btn btn-light">Buy</a>
             </div>
         </div>
+
     </div>
 </div>
 
