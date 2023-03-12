@@ -48,7 +48,13 @@ INSERT INTO snack (name) VALUES ('Soda');
 INSERT INTO snack (name) VALUES ('Gum');
 
 -- SLOTS
+-- SNACK_MACHINE ID=1
 INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 3.50, 1, 1, 1);
 INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 2.75, 1, 2, 2);
 INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 0.99, 1, 3, 3);
+-- SNACK_MACHINE ID=2
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 3.99, 2, 1, 1);
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 2.99, 2, 2, 2);
+INSERT INTO slot (quantity, price, snack_machine_id, snack_id, "position") VALUES (10, 1.99, 2, 3, 3);
+
 

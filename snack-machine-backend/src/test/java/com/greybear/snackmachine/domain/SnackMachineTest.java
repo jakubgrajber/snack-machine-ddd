@@ -1,14 +1,12 @@
 package com.greybear.snackmachine.domain;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.stream.IntStream;
 
 import static com.greybear.snackmachine.domain.Money.*;
 import static com.greybear.snackmachine.domain.Snack.*;
@@ -66,10 +64,12 @@ class SnackMachineTest {
     void givenSnackMachineWithSnacks_whenBuysASnack_thenTradesInsertedMoneyForASnack() {
 
         // GIVEN
-        snackMachine.loadSnacks(1, new SnackPile(CHOCOLATE, 10, new BigDecimal("1")));
-        snackMachine.insertMoney(DOLLAR);
+        int initialQuantity = 10;
+        BigDecimal price = new BigDecimal("1.00");
+        snackMachine.loadSnacks(1, new SnackPile(CHOCOLATE, initialQuantity, price));
 
         // WHEN
+        snackMachine.insertMoney(DOLLAR);
         snackMachine.buySnack(1);
 
         // THEN
@@ -159,19 +159,39 @@ class SnackMachineTest {
            10.99 | false
            5.00  | true
            3.75  | true""")
-    void givenCertainAmountOfMoneyInsertedIntoTheMachine_whenChecksIfCanMakeAPurchase_thanReturnBooleanAccordingToTheGivenMoney
+    void givenCertainAmountOfMoneyInsertedIntoTheMachine_whenChecksIfCanMakeAPurchase_thanReturnsBooleanAccordingToTheGivenMoney
             (String money, boolean expectedPurchaseDecision) {
 
         // GIVEN
         BigDecimal price = new BigDecimal(money);
         SnackPile snackPile = new SnackPile(CHOCOLATE, 1, price);
         snackMachine.loadSnacks(1, snackPile);
+        snackMachine.loadMoney(new Money(10, 10,10,10,10,10));
 
         // WHEN
         snackMachine.insertMoney(FIVE_DOLLAR);
-        boolean canBuyASnack = snackMachine.canMakePurchase(1);
+        boolean canBuyASnack = snackMachine.isEnoughMoneyToBuy(1);
 
         // THEN
         assertThat(canBuyASnack).isEqualTo(expectedPurchaseDecision);
+    }
+
+    @Test
+    void givenNotEnoughMoneyInMachineToReturnChange_whenChecksIfCanMakeAPurchase_thenReturnsFalse() {
+
+        // GIVEN
+        BigDecimal price = new BigDecimal("2.99");
+        SnackPile snackPile = new SnackPile(SODA, 3, price);
+        snackMachine.loadSnacks(1, snackPile);
+
+        Money moneyInsideMachine = new Money(0, 1, 1, 1,1,1);
+        snackMachine.loadMoney(moneyInsideMachine);
+
+        // WHEN
+        IntStream.range(0,3).forEach(x -> snackMachine.insertMoney(DOLLAR));
+        boolean canBuyASnack = snackMachine.isEnoughMoneyInsideForAChange(1);
+
+        // THEN
+        assertThat(canBuyASnack).isFalse();
     }
 }

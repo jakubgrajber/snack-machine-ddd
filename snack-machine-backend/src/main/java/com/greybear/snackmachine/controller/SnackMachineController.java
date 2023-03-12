@@ -9,26 +9,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
-
 import static com.greybear.snackmachine.domain.Money.*;
 
 @Controller
 @RequiredArgsConstructor
 public class SnackMachineController {
 
+    private static final String PURCHASE_INFO_ATTRIBUTE_NAME = "purchaseInfo";
+    private static final String SNACK_MACHINE_ATTRIBUTE_NAME = "snackMachine";
     private final SnackMachineRepository snackMachineRepository;
     private SnackMachine mainSnackMachine;
 
     @PostConstruct
     private void postConstruct() {
-        mainSnackMachine = snackMachineRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
+        mainSnackMachine = snackMachineRepository.findById(2L).orElseThrow(IllegalArgumentException::new);
     }
 
     @GetMapping("/")
     public String snackMachineView(Model model) {
-        model.addAttribute("snackMachine", mainSnackMachine);
-        model.addAttribute("purchaseInfo", "Insert money");
+        model.addAttribute(SNACK_MACHINE_ATTRIBUTE_NAME, mainSnackMachine);
+        model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Insert money");
         return "snack-machine";
     }
 
@@ -56,13 +56,17 @@ public class SnackMachineController {
 
     @GetMapping("buySnack")
     public String buySnack(@RequestParam int position, Model model) {
-        model.addAttribute("snackMachine", mainSnackMachine);
-        if (mainSnackMachine.canMakePurchase(position)) {
+        model.addAttribute(SNACK_MACHINE_ATTRIBUTE_NAME, mainSnackMachine);
+        if (!mainSnackMachine.isEnoughMoneyToBuy(position))
+            model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Not enough money!");
+        else if (!mainSnackMachine.isEnoughMoneyInsideForAChange(position)) {
+            model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Not enough money for a change.");
+            mainSnackMachine.returnMoney();
+        } else {
             mainSnackMachine.buySnack(position);
-            snackMachineRepository.save(mainSnackMachine);
-            model.addAttribute("purchaseInfo", "Transaction completed!");
-        } else
-            model.addAttribute("purchaseInfo", "Not enough money!");
+            model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Transaction completed!");
+        }
+        snackMachineRepository.save(mainSnackMachine);
 
         return "snack-machine";
     }
