@@ -22,7 +22,7 @@ public class SnackMachineController {
 
     @PostConstruct
     private void postConstruct() {
-        mainSnackMachine = snackMachineRepository.findById(2L).orElseThrow(IllegalArgumentException::new);
+        mainSnackMachine = snackMachineRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
     }
 
     @GetMapping("/")
@@ -61,6 +61,9 @@ public class SnackMachineController {
             model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Not enough money!");
         else if (!mainSnackMachine.isEnoughMoneyInsideForAChange(position)) {
             model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Not enough money for a change.");
+            mainSnackMachine.returnMoney();
+        } else if (!mainSnackMachine.isSnackAvailable(position)) {
+            model.addAttribute(PURCHASE_INFO_ATTRIBUTE_NAME, "Insufficient quantity of goods.");
             mainSnackMachine.returnMoney();
         } else {
             mainSnackMachine.buySnack(position);

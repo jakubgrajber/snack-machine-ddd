@@ -41,9 +41,9 @@ public class SnackMachine {
         moneyInside = NONE;
         moneyInTransaction = BigDecimal.ZERO;
         slots = new HashSet<>(List.of(
-           new Slot(this, 1),
-           new Slot(this, 2),
-           new Slot(this, 3)
+                new Slot(this, 1),
+                new Slot(this, 2),
+                new Slot(this, 3)
         ));
     }
 
@@ -94,6 +94,7 @@ public class SnackMachine {
     public void loadSnacks(int position, SnackPile snackPile) {
         getSlot(position).setSnackPile(snackPile);
     }
+
     public void loadMoney(Money money) {
         moneyInside = moneyInside.add(money);
     }
@@ -118,5 +119,9 @@ public class SnackMachine {
         Money change = moneyInside.allocate(moneyInTransaction.subtract(snackPrice));
 
         return change.getAmount().compareTo(moneyInTransaction.subtract(snackPrice)) >= 0;
+    }
+
+    public boolean isSnackAvailable(int slotPosition) {
+        return getSlot(slotPosition).getSnackPile().getQuantity() > 0;
     }
 }

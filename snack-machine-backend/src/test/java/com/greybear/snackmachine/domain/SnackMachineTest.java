@@ -194,4 +194,19 @@ class SnackMachineTest {
         // THEN
         assertThat(canBuyASnack).isFalse();
     }
+
+    @Test
+    void givenNotSufficientAmountOfGoods_whenChecksIfCanMakeAPurchase_thenReturnsFalse() {
+
+        // GIVEN
+        BigDecimal price = new BigDecimal("12.12");
+        SnackPile snackPile = new SnackPile(GUM, 0, price);
+        snackMachine.loadSnacks(1, snackPile);
+
+        // WHEN
+        boolean canBuyASnack = snackMachine.isSnackAvailable(1);
+
+        // THEN
+        assertThat(canBuyASnack).isFalse();
+    }
 }
